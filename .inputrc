@@ -1,0 +1,5 @@
+# Bind Alt-* to glob-expand-word
+"\e*": glob-expand-word
+
+# insert-comment (M-#),
+"\e#": insert-comment

@@ -1,0 +1,29 @@
+# for SHELL
+~/.profile
+~/.bashrc
+
+# for SHELL hotkey
+~/.inputrc
+
+# for vim
+~/.vimrc
+
+# for customized tmux
+~/.tmux.conf
+
+# mainly for gedit, but is default
+# ~/.config
+
+# for ssh of user account, key and locker
+# ~/.ssh
+
+# for ssh of root account, port 2025 for ssh not default 22 
+/etc/ssh/sshd_config
+
+# for "sudo apt install" command, it's root account proxy by port 7897 by clash-verge
+/etc/apt/apt.conf.d/99proxy.conf
+
+# my note in this server, not configure
+~/..mynote
+
+

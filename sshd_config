@@ -1,0 +1,9 @@
+# recreate in 20250727 after crisis
+
+# port for ssh-link, default is port 22, use command below to restart
+# systemctl daemon-reload
+# systemctl restart ssh.socket
+Port 2025
+
+PasswordAuthentication  no
+PermitRootLogin  no
