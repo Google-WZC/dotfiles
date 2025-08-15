@@ -26,4 +26,8 @@
 # my note in this server, not configure
 ~/..mynote
 
+# for apt install depends of docker
+/etc/apt/sources.list.d/docker.list
 
+# docker proxy
+/etc/systemd/system/docker.service.d/http-proxy.conf
