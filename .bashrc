@@ -138,8 +138,13 @@ if [[ $(echo $SSH_CONNECTION) != "" ]];then
 	export all_proxy=socks://127.0.0.1:7897/
 fi
 
-# set bind -f ~/.inp
-# bind -f ~/.inputrc 
+# set ssh-agent for ssh-key silently, which is used for github and gitlab
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    eval $(ssh-agent -s | grep -v '^echo') > /dev/null
+fi
+if ! ssh-add -l &> /dev/null; then
+    ssh-add ~/.ssh/id_github &> /dev/null
+fi
 
 # for long commands, use editor, with hotkey Ctrl+x Ctrl+e
 if [[ $(echo $SSH_CONNECTION) = "" ]];then
@@ -337,6 +342,9 @@ curl google.com
 echo ' '
 echo 'sudo curl google.com'
 sudo curl google.com
+echo ' '
+echo 'ssh -T git@github.com'
+ssh -T git@github.com
 }
 
 # modify dotfiles env PATH and add them in $HOME/gits/dotfiles with shell script env_path
