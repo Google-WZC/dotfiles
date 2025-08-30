@@ -120,7 +120,7 @@ export PS1='\[\e[1;34m\]\w\[\e[m\] $ '
 # set env-variable for non-interactive and non-login
 # export BASH_ENV=''
 
-# PATH gcc debug for vscode, you don't have to set the following PATH, but open file with vscode GUI
+# set ${workspaceFolder} vscode configure(.json), you don't have to set the following PATH. You only need to open file on vscode GUI
 # export workspaceFolder="~/ysyx/c/life"
 
 # set for vscode-ssh-link the man command option, but even I don't add this, man function will work
@@ -154,6 +154,9 @@ else
 	export EDITOR="code --wait" 
 fi
 
+# for npm global packages(-g option) install path
+export PATH=~/.npm-global/bin:$PATH
+
 # fd-find command 
 alias fd=fdfind
 
@@ -170,7 +173,8 @@ alias python=python3
 alias mv="mv -i"
 
 # overwrite default command "mkdir"(can't create new directory in new directory with only one command)
-alias mkdir="mkdir -p" 
+# alias mkdir="mkdir -p" 
+# because it's customized below
 
 # overwrite default command "rm"(remove one file without ensure)
 alias rm='rm -i'
@@ -194,7 +198,7 @@ alias sudo="sudo -E"
 alias gita="git add"
 alias gitr="git rm"
 alias gitrestore="git restore"
-alias gitc="git commit -m push"
+gitc () { git commit -m "$1" && git push; }
 alias gitp="git push"
 # other common git command
 alias gitpull="git pull --rebase" # git pull(default is merge) used when collaborate with others, and --rebase option used license 
@@ -227,26 +231,29 @@ ls -lA -tcr
 }
 
 # open ~/.bashrc with gedit and source if shutdowm
-# if vscode ssh-link, source must be used handly
 gdbashrc(){
-gd ~/.bashrc
+gdwait ~/.bashrc
 source ~/.bashrc
 }
 
 # open ~/.profile with gedit and source if shutdowm
-gdprofile(){
-gd ~/.profile
-source ~/.profile
-}
+# gdprofile(){
+# gd ~/.profile
+# source ~/.profile
+# }
 
 # which means my note
 gdman(){
 gd ~/..mynote
 }
 
-# open ~/.profile with gedit and source if shutdowm
+# customized terminal hotkey
 gdinputrc(){
-gd ~/.inputrc
+if [[ $(echo $SSH_CONNECTION) = "" ]];then
+	gedit ~/.inputrc 
+else 
+	code ~/.inputrc --wait
+fi
 bind -f ~/.inputrc
 }
 
@@ -259,12 +266,20 @@ if [[ $(echo $SSH_CONNECTION) = "" ]];then
 fi
 
 # use gedit in child-process
-# IDE for different platform
+# vscode for window11 ssh-link
 gd(){
 if [[ $(echo $SSH_CONNECTION) = "" ]];then
 	gedit "$@" &
 else 
-	code "$@"
+	code "$@" 
+fi
+}
+# wait for gedit or code to finish
+gdwait(){
+if [[ $(echo $SSH_CONNECTION) = "" ]];then
+	gedit "$@" 
+else 
+	code "$@" --wait
 fi
 }
 
@@ -340,11 +355,15 @@ command cd $1
 ll
 }
 
-# make directory and cd to this new directory
-mkcd(){
-command mkdir -p $1
-command cd $1
-ll 
+# # make directory and cd to this new directory
+function mkdir(){
+if [ -z "$1" ]; then
+    echo "Error: You must provide a directory name."
+    return 1
+fi
+command mkdir -p "$1"
+command cd "$1"
+ll
 }
 
 # make c with GNU essential-build, and test with Valgrind
@@ -366,15 +385,10 @@ echo 'ssh -T git@github.com'
 ssh -T git@github.com
 }
 
-# modify dotfiles env PATH and add them in $HOME/gits/dotfiles with shell script env_path
-gdconfPATH(){
-gd ~/gits/dotfiles/env_path
-confPATH
-}
-
-# add them in $HOME/gits/dotfiles with shell script env_path
+# modify dotfiles env PATH and add them in $HOME/gits/dotfiles
 confPATH(){
 command cd $HOME/gits/dotfiles
+gdwait ./env_path
 ./add_env
 ll
 }
