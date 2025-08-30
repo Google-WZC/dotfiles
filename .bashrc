@@ -113,11 +113,15 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# -------------------------- Here is my customized configures ----------------------------------------
 # delete 'icer@icer-VMware-Virtual-Platform:' command-reminder
 export PS1='\[\e[1;34m\]\w\[\e[m\] $ '
 
 # set env-variable for non-interactive and non-login
 # export BASH_ENV=''
+
+# PATH gcc debug for vscode, you don't have to set the following PATH, but open file with vscode GUI
+# export workspaceFolder="~/ysyx/c/life"
 
 # set for vscode-ssh-link the man command option, but even I don't add this, man function will work
 if [[ $(echo $SSH_CONNECTION) != "" ]];then
@@ -139,12 +143,9 @@ if [[ $(echo $SSH_CONNECTION) != "" ]];then
 fi
 
 # set ssh-agent for ssh-key silently, which is used for github and gitlab
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    eval $(ssh-agent -s | grep -v '^echo') > /dev/null
-fi
-if ! ssh-add -l &> /dev/null; then
-    ssh-add ~/.ssh/id_github &> /dev/null
-fi
+eval $(ssh-agent -s | grep -v '^echo') > /dev/null
+ssh-add ~/.ssh/id_github &> /dev/null
+
 
 # for long commands, use editor, with hotkey Ctrl+x Ctrl+e
 if [[ $(echo $SSH_CONNECTION) = "" ]];then
@@ -188,6 +189,24 @@ alias vm=mv
 
 # let the root account inherit common account's env, mainly for proxy setting, because root will run in his only env not the comman-env
 alias sudo="sudo -E"
+
+# my git push habit
+alias gita="git add"
+alias gitr="git rm"
+alias gitrestore="git restore"
+alias gitc="git commit -m push"
+alias gitp="git push"
+# other common git command
+alias gitpull="git pull --rebase" # git pull(default is merge) used when collaborate with others, and --rebase option used license 
+alias gitstatus="git status"
+alias gitcheckout="git checkout"
+alias gitbranch="git branch"
+alias gitclone="git clone"
+# git initialize
+alias gitinit1="git init"
+alias gitinit2_remote="git remote add origin" # trace to remote xxx.git
+alias gitinit3_branch="git push --set-upstream origin" # trace to specify branch (github's default init branch is main)
+alias gitinit4_modifybranch="git branch -m" # modify previous branch to latter(->).
 
 # fzf tool for Ctrl+R history command show
 source /usr/share/doc/fzf/examples/key-bindings.bash
