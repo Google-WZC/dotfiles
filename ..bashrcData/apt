@@ -1,0 +1,11 @@
+# update apt list(not upgrade) and install software
+install(){
+    if [[ -z "$VIRTUAL_ENV" ]];then
+        sudo apt update && sudo apt install -y "$@"
+    else
+        pip install "$@"
+    fi
+}
+
+# download(which can't be download by apt) and manage local software(such as: vscode)
+source ~/..bashrcData/local_software_managment

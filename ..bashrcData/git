@@ -1,0 +1,42 @@
+# my git push habit
+alias gitr="git rm"
+alias gitrestore="git restore"
+gitc () { git commit -m "$1" && git push; }
+alias gitp="git push"
+# other common git command
+alias gitpull="git pull --rebase" # git pull(default is merge) used when collaborate with others, and --rebase option used license 
+alias gitstatus="git status"
+alias gitcheckout="git checkout"
+alias gitbranch="git branch"
+alias gitclone="git clone"
+# init a new git repo and push to remote repo
+gitinit(){ # gitinit <remote-repo-url> <file1> <file2> ... 
+    git init &&
+    git remote add origin "$1" &&
+    git branch -m main &&
+    git fetch origin &&
+    shift &&
+    git add "$@" &&
+    git commit -m "first commit" &&
+    git rebase origin/main &&
+    git push --set-upstream origin main
+}
+# add files
+gita(){ # gita <file1> <file2> ... <commit-message>
+    git add "${@:1:$#-1}" &&
+    git commit -m "${!#}" &&
+    git push
+}
+# git function help
+githelp(){
+    echo 'gitinit() Usage:'
+    echo 'gitinit <remote-repo-url> <file1> <file2> ... <fileN>'
+    echo 'gita()    Usage:'
+    echo 'gita <file1> <file2> ... <fileN> <commit-message>'
+}
+
+
+# set ssh-agent for ssh-key silently, which is used for github and gitlab
+eval $(ssh-agent -s | grep -v '^echo') > /dev/null
+ssh-add ~/.ssh/id_github &> /dev/null
+

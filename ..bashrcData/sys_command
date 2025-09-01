@@ -1,0 +1,14 @@
+# overwrite some default command
+source ~/..bashrcData/override
+
+# some command easily mis-typed
+source ~/..bashrcData/wrong
+
+# editor command
+source ~/..bashrcData/editor
+
+# my costumized command with basic sys_command and editor_command combinated
+source ~/..bashrcData/costumized
+
+
+

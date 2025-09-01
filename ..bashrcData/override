@@ -1,0 +1,64 @@
+# overwrite default cd, cd to another directory and show
+cd(){
+    command cd $1
+    ll
+}
+
+# make directory and cd to this new directory
+function mkdir(){
+    if [ -z "$1" ]; then
+        echo "Error: You must provide a directory name."
+        return 1
+    fi
+    command mkdir -p "$1"
+    command cd "$1"
+    ll # if the directory exists, the command will cd to it and ll
+}
+
+# overwrite default command "mv"(may override existing file with renamed file)
+alias mv="mv -i"
+
+# overwrite default command "mkdir"(can't create new directory in new directory with only one command)
+# alias mkdir="mkdir -p" 
+# because it's customized below
+
+# overwrite default command "rm"(remove one file without ensure)
+alias rm='rm -i'
+
+# let the root account inherit common account's env, mainly for proxy setting, because root will run in his only env not the comman-env
+alias sudo="sudo -E"
+
+# override default command exit to quit python virtualenv
+alias exit=deactivate
+
+# source ~/.bashrc without thinking hh
+source(){
+    if [[ -z $1 ]];then
+        command source ~/.bashrc
+    else
+        command source $1
+    fi
+}
+
+# customized tmux command
+tmux(){
+    # alias default command "tmux new -s $1"(create a new session named $1) with command "tmux -name $1" or "tmux -n $1"
+    if [[ $1 = '-name' || $1 = '-n' ]];then
+        command tmux new -s $2
+    # alias default command "tmux rename-session -t $1 $2"(rename an existing session named $1 to $2) with command "tmux -rename $1" or "tmux -r $1"
+    elif [[ $1 = '-rename' || $1 = '-r' ]];then
+        command tmux rename-session -t $2 $3
+    # alias default command "tmux attach -t $1"(attach to existing session named $1) with command "tmux a $1" or "tmux attach $1" 
+    elif [[ ($1 = 'attach' || $1 = 'a') && $2 != '' ]];then
+        command tmux attach -t $2
+    # alias default command "tmux kill-session -t $1"(kill an existing session named $1) with command "tmux kill $1" or "tmux k $1" 
+    elif [[ ($1 = 'kill' || $1 = 'k') && $2 != '' ]];then
+        command tmux kill-session -t $2
+    # if tmux command isn't my customized, return obvious command
+    else
+        command tmux $@
+    fi
+}
+
+
+

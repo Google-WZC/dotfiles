@@ -1,0 +1,6 @@
+# make c with GNU essential-build, and test with Valgrind
+test_c(){
+    # make $1
+    # ./$1
+    valgrind ./$1
+}

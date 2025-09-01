@@ -1,0 +1,12 @@
+# apt function 
+source ~/..bashrcData/apt
+
+# git function
+source ~/..bashrcData/git
+
+# pip function
+source ~/..bashrcData/pip
+
+# language function
+source ~/..bashrcData/language
+

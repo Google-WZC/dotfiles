@@ -1,0 +1,20 @@
+# delete 'icer@icer-VMware-Virtual-Platform:' command-reminder
+export PS1='\[\e[1;34m\]\w\[\e[m\] $ '
+
+# set env-variable for non-interactive and non-login
+# export BASH_ENV=''
+
+# set ${workspaceFolder} vscode configure(.json), you don't have to set the following PATH. You only need to open file on vscode GUI
+# export workspaceFolder="~/ysyx/c/life"
+
+# set for vscode-ssh-link the man command option, but even I don't add this, man function will work
+# if [[ $(echo $SSH_CONNECTION) != "" ]];then
+#     export LANG=C.UTF-8
+# fi
+
+# for long commands, use editor, with hotkey Ctrl+x Ctrl+e
+if [[ $(echo $SSH_CONNECTION) = "" ]];then
+	export EDITOR="gedit --wait" 
+else 
+	export EDITOR="code --wait" 
+fi

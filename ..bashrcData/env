@@ -1,0 +1,11 @@
+# terminal setting
+source ~/..bashrcData/terminal
+
+# PATH setting
+source ~/..bashrcData/path
+
+# set proxy for ssh-linked-terminal apt proxy
+source ~/..bashrcData/proxy
+
+# fzf tool for Ctrl+R history command show
+command source /usr/share/doc/fzf/examples/key-bindings.bash

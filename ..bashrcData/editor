@@ -1,0 +1,60 @@
+# vscode software
+alias vscode=code
+
+# overwrite customized command gedit ~/.bashrc
+alias bashrc=gdbashrc
+
+# gedit Makefile in current path
+gdmakefile(){
+    gd ./Makefile
+}
+
+# open ~/.bashrc with gedit and source if shutdowm
+    gdbashrc(){
+    gdwait ~/.bashrc
+    command source ~/.bashrc
+}
+
+# open ~/.profile with gedit and source if shutdowm
+# gdprofile(){
+# gd ~/.profile
+# command source ~/.profile
+# }
+
+# which means my note
+gdman(){
+    gd ~/..mynote
+}
+
+# customized terminal hotkey
+gdinputrc(){
+    if [[ $(echo $SSH_CONNECTION) = "" ]];then
+        gedit ~/.inputrc 
+    else 
+        code ~/.inputrc --wait
+    fi
+    bind -f ~/.inputrc
+}
+
+# use gedit in child-process
+# vscode for window11 ssh-link
+gd(){
+    if [[ $(echo $SSH_CONNECTION) = "" ]];then
+        gedit "$@" &
+    else 
+        code "$@" 
+    fi
+}
+# wait for gedit or code to finish
+gdwait(){
+    if [[ $(echo $SSH_CONNECTION) = "" ]];then
+        gedit "$@" 
+    else 
+        code "$@" --wait
+    fi
+}
+
+# use vim
+vi(){
+    vim "$@" 
+}

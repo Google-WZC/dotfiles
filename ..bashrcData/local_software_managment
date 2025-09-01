@@ -1,0 +1,36 @@
+# command for software below
+# download "*.deb"
+software_install_deb(){
+    sudo apt install ./$1
+}
+
+# periodly clean .deb software cache with this safe command
+software_cache_periodly_clean(){
+    sudo apt clean
+}
+
+# uninstall .deb downloaded software totally
+software_uninstall_deb_software(){
+    sudo apt purge $@       # remove all config files
+    # sudo apt remove $@      # not remove config files, but only remove software
+    sudo apt autoremove
+}
+
+# show .deb sofeware's detail information
+software_show_deb_software_details(){
+    echo '-------------------文件体积-------------------'
+    echo '.deb文件体积'
+    apt show $1 2>/dev/null | grep 'Installed-Size'
+    echo '安装体积'
+    apt show $1 2>/dev/null | grep 'Download-Size'
+    echo '-------------------文件路径-------------------'
+    echo '启动路径'
+    which $1
+    echo '启动路径是否有指向'
+    ls -l $(which $1)
+    echo '启动路径的所有路径（主要包含了mannul）'
+    whereis $1
+    echo '所有安装路径的目录'
+    grep -Po "/usr/share/.*?/" codeL | sort -u
+}
+

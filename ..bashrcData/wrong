@@ -1,0 +1,15 @@
+# use default python env
+alias python=python3
+
+# commonly used command for vague match
+alias dc=cd
+alias sl=ls
+alias dg=gd
+alias vm=mv
+
+# old habit
+alias mkcd=mkdir
+
+# switch to root account
+alias su="sudo su"
+

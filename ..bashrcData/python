@@ -1,0 +1,10 @@
+# This is a NULL file
+
+# ----from other but used in this situation---
+# from sys_command::wrong
+# use default python env
+# alias python=python3
+
+# override default command exit to quit python virtualenv
+# from sys_command::override
+# alias exit=deactivate

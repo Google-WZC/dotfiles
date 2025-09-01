@@ -1,0 +1,12 @@
+# for vscode-ssh-link proxy settings, which can show with command "env | grep -i proxy"
+# when using linux directly with GUI, running clash-verge backgroundly will add them automatically, and shutdown clash will delete them
+if [[ $(echo $SSH_CONNECTION) != "" ]];then
+	export no_proxy=localhost,127.0.0.1,192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,172.29.0.0/16,::1
+	export https_proxy=http://127.0.0.1:7897/
+	export NO_PROXY=localhost,127.0.0.1,192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,172.29.0.0/16,::1
+	export HTTPS_PROXY=http://127.0.0.1:7897/
+	export HTTP_PROXY=http://127.0.0.1:7897/
+	export http_proxy=http://127.0.0.1:7897/
+	export ALL_PROXY=socks://127.0.0.1:7897/
+	export all_proxy=socks://127.0.0.1:7897/
+fi

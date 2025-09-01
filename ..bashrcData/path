@@ -1,0 +1,8 @@
+# for npm global packages(-g option) install path, the set command below is from https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
+# mkdir ~/.npm-global
+# npm config set prefix '~/.npm-global'
+export PATH=~/.npm-global/bin:$PATH
+
+# for pipx install path(such as: black)
+export PATH=~/.local/bin:$PATH
+
