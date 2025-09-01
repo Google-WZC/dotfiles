@@ -154,8 +154,13 @@ else
 	export EDITOR="code --wait" 
 fi
 
-# for npm global packages(-g option) install path
+# for npm global packages(-g option) install path, the set command below is from https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
+# mkdir ~/.npm-global
+# npm config set prefix '~/.npm-global'
 export PATH=~/.npm-global/bin:$PATH
+
+# for pipx install path(such as: black)
+export PATH=~/.local/bin:$PATH
 
 # fd-find command 
 alias fd=fdfind
@@ -166,8 +171,31 @@ alias rg=ripgrep
 # vscode software
 alias vscode=code
 
+# update apt list(not upgrade) and install software
+install(){
+    if [[ -z "$VIRTUAL_ENV" ]];then
+        sudo apt update && sudo apt install -y "$@"
+    else
+        pip install "$@"
+    fi
+}
+
 # use default python env
 alias python=python3
+
+# override default command exit to quit python virtualenv
+alias exit=deactivate
+
+# activate python virtualenv
+py(){
+    command source "$1"/bin/activate
+}
+
+# create python virtualenv
+alias pyc="command python3 -m venv"
+
+# upgrade pip packages
+alias pipup="pip install --upgrade"
 
 # overwrite default command "mv"(may override existing file with renamed file)
 alias mv="mv -i"
@@ -195,7 +223,6 @@ alias vm=mv
 alias sudo="sudo -E"
 
 # my git push habit
-alias gita="git add"
 alias gitr="git rm"
 alias gitrestore="git restore"
 gitc () { git commit -m "$1" && git push; }
@@ -206,55 +233,75 @@ alias gitstatus="git status"
 alias gitcheckout="git checkout"
 alias gitbranch="git branch"
 alias gitclone="git clone"
-# git initialize
-alias gitinit1="git init"
-alias gitinit2_remote="git remote add origin" # trace to remote xxx.git
-alias gitinit3_branch="git push --set-upstream origin" # trace to specify branch (github's default init branch is main)
-alias gitinit4_modifybranch="git branch -m" # modify previous branch to latter(->).
+# init a new git repo and push to remote repo
+gitinit(){ # gitinit <remote-repo-url> <file1> <file2> ... 
+    git init &&
+    git remote add origin "$1" &&
+    git branch -m main &&
+    git fetch origin &&
+    shift &&
+    git add "$@" &&
+    git commit -m "first commit" &&
+    git rebase origin/main &&
+    git push --set-upstream origin main
+}
+# add files
+gita(){ # gita <file1> <file2> ... <commit-message>
+    git add "${@:1:$#-1}" &&
+    git commit -m "${!#}" &&
+    git push
+}
+# git function help
+githelp(){
+    echo 'gitinit() Usage:'
+    echo 'gitinit <remote-repo-url> <file1> <file2> ... <fileN>'
+    echo 'gita()    Usage:'
+    echo 'gita <file1> <file2> ... <fileN> <commit-message>'
+}
 
 # fzf tool for Ctrl+R history command show
-source /usr/share/doc/fzf/examples/key-bindings.bash
+command source /usr/share/doc/fzf/examples/key-bindings.bash
 
 # my customized commands
 # cd to YSYX dictionary, and show all files' details(e.g. ctime) in this path and sort them with ctime by oldest-to-newest order, besides show file-size with non-humman-read format(unit:bit)
 init(){
-figlet -f slant ysyx
-echo -e "\n"
-command cd ~/ysyx
-ls -lA -tcr --color=always | sed '1d'
+    figlet -f slant ysyx
+    echo -e "\n"
+    command cd ~/ysyx
+    ls -lA -tcr --color=always | sed '1d'
 }
 
 # cd to GUI Trash
-cd_to_Trash(){
-cd ~/.local/share/Trash/files
-ls -lA -tcr
+    cd_to_Trash(){
+    cd ~/.local/share/Trash/files
+    ls -lA -tcr
 }
 
 # open ~/.bashrc with gedit and source if shutdowm
-gdbashrc(){
-gdwait ~/.bashrc
-source ~/.bashrc
+    gdbashrc(){
+    gdwait ~/.bashrc
+    command source ~/.bashrc
 }
 
 # open ~/.profile with gedit and source if shutdowm
 # gdprofile(){
 # gd ~/.profile
-# source ~/.profile
+# command source ~/.profile
 # }
 
 # which means my note
 gdman(){
-gd ~/..mynote
+    gd ~/..mynote
 }
 
 # customized terminal hotkey
 gdinputrc(){
-if [[ $(echo $SSH_CONNECTION) = "" ]];then
-	gedit ~/.inputrc 
-else 
-	code ~/.inputrc --wait
-fi
-bind -f ~/.inputrc
+    if [[ $(echo $SSH_CONNECTION) = "" ]];then
+        gedit ~/.inputrc 
+    else 
+        code ~/.inputrc --wait
+    fi
+    bind -f ~/.inputrc
 }
 
 # open current path with terminal command
@@ -268,136 +315,153 @@ fi
 # use gedit in child-process
 # vscode for window11 ssh-link
 gd(){
-if [[ $(echo $SSH_CONNECTION) = "" ]];then
-	gedit "$@" &
-else 
-	code "$@" 
-fi
+    if [[ $(echo $SSH_CONNECTION) = "" ]];then
+        gedit "$@" &
+    else 
+        code "$@" 
+    fi
 }
 # wait for gedit or code to finish
 gdwait(){
-if [[ $(echo $SSH_CONNECTION) = "" ]];then
-	gedit "$@" 
-else 
-	code "$@" --wait
-fi
+    if [[ $(echo $SSH_CONNECTION) = "" ]];then
+        gedit "$@" 
+    else 
+        code "$@" --wait
+    fi
 }
 
 # use vim
 vi(){
-vim "$@" 
+    vim "$@" 
 }
 
 # command for software below
 # download "*.deb"
 software_install_deb(){
-sudo apt install ./$1
+    sudo apt install ./$1
 }
 
 # periodly clean .deb software cache with this safe command
 software_cache_periodly_clean(){
-sudo apt clean
+    sudo apt clean
 }
 
 # uninstall .deb downloaded software totally
 software_uninstall_deb_software(){
-sudo apt purge $@       # remove all config files
-# sudo apt remove $@      # not remove config files, but only remove software
-sudo apt autoremove
+    sudo apt purge $@       # remove all config files
+    # sudo apt remove $@      # not remove config files, but only remove software
+    sudo apt autoremove
 }
 
 # show .deb sofeware's detail information
 software_show_deb_software_details(){
-echo '-------------------文件体积-------------------'
-echo '.deb文件体积'
-apt show $1 2>/dev/null | grep 'Installed-Size'
-echo '安装体积'
-apt show $1 2>/dev/null | grep 'Download-Size'
-echo '-------------------文件路径-------------------'
-echo '启动路径'
-which $1
-echo '启动路径是否有指向'
-ls -l $(which $1)
-echo '启动路径的所有路径（主要包含了mannul）'
-whereis $1
-echo '所有安装路径的目录'
-grep -Po "/usr/share/.*?/" codeL | sort -u
+    echo '-------------------文件体积-------------------'
+    echo '.deb文件体积'
+    apt show $1 2>/dev/null | grep 'Installed-Size'
+    echo '安装体积'
+    apt show $1 2>/dev/null | grep 'Download-Size'
+    echo '-------------------文件路径-------------------'
+    echo '启动路径'
+    which $1
+    echo '启动路径是否有指向'
+    ls -l $(which $1)
+    echo '启动路径的所有路径（主要包含了mannul）'
+    whereis $1
+    echo '所有安装路径的目录'
+    grep -Po "/usr/share/.*?/" codeL | sort -u
 }
 
 # customized tmux command
 tmux(){
-# alias default command "tmux new -s $1"(create a new session named $1) with command "tmux -name $1" or "tmux -n $1"
-if [[ $1 = '-name' || $1 = '-n' ]];then
-	command tmux new -s $2
-# alias default command "tmux rename-session -t $1 $2"(rename an existing session named $1 to $2) with command "tmux -rename $1" or "tmux -r $1"
-elif [[ $1 = '-rename' || $1 = '-r' ]];then
-	command tmux rename-session -t $2 $3
-# alias default command "tmux attach -t $1"(attach to existing session named $1) with command "tmux a $1" or "tmux attach $1" 
-elif [[ ($1 = 'attach' || $1 = 'a') && $2 != '' ]];then
-	command tmux attach -t $2
-# alias default command "tmux kill-session -t $1"(kill an existing session named $1) with command "tmux kill $1" or "tmux k $1" 
-elif [[ ($1 = 'kill' || $1 = 'k') && $2 != '' ]];then
-	command tmux kill-session -t $2
-# if tmux command isn't my customized, return obvious command
-else
-	command tmux $@
-fi
+    # alias default command "tmux new -s $1"(create a new session named $1) with command "tmux -name $1" or "tmux -n $1"
+    if [[ $1 = '-name' || $1 = '-n' ]];then
+        command tmux new -s $2
+    # alias default command "tmux rename-session -t $1 $2"(rename an existing session named $1 to $2) with command "tmux -rename $1" or "tmux -r $1"
+    elif [[ $1 = '-rename' || $1 = '-r' ]];then
+        command tmux rename-session -t $2 $3
+    # alias default command "tmux attach -t $1"(attach to existing session named $1) with command "tmux a $1" or "tmux attach $1" 
+    elif [[ ($1 = 'attach' || $1 = 'a') && $2 != '' ]];then
+        command tmux attach -t $2
+    # alias default command "tmux kill-session -t $1"(kill an existing session named $1) with command "tmux kill $1" or "tmux k $1" 
+    elif [[ ($1 = 'kill' || $1 = 'k') && $2 != '' ]];then
+        command tmux kill-session -t $2
+    # if tmux command isn't my customized, return obvious command
+    else
+        command tmux $@
+    fi
 }
 
 # ls with format the same with init
 ll(){
-ls -lA -tcr --color=always "$@" | sed 1d
+    ls -lA -tcr --color=always "$@" | sed 1d
 }
 
 # overwrite default cd, cd to another directory and show
 cd(){
-command cd $1
-ll
+    command cd $1
+    ll
 }
 
 # # make directory and cd to this new directory
 function mkdir(){
-if [ -z "$1" ]; then
-    echo "Error: You must provide a directory name."
-    return 1
-fi
-command mkdir -p "$1"
-command cd "$1"
-ll
+    if [ -z "$1" ]; then
+        echo "Error: You must provide a directory name."
+        return 1
+    fi
+    command mkdir -p "$1"
+    command cd "$1"
+    ll # if the directory exists, the command will cd to it and ll
 }
 
 # make c with GNU essential-build, and test with Valgrind
 test_c(){
-# make $1
-# ./$1
-valgrind ./$1
+    # make $1
+    # ./$1
+    valgrind ./$1
 }
 
 # test proxy in usr and root
 internat(){
-echo 'curl google.com'
-curl google.com
-echo ' '
-echo 'sudo curl google.com'
-sudo curl google.com
-echo ' '
-echo 'ssh -T git@github.com'
-ssh -T git@github.com
+    echo 'curl google.com'
+    curl google.com
+    echo ' '
+    echo 'sudo curl google.com'
+    sudo curl google.com
+    echo ' '
+    echo 'ssh -T git@github.com'
+    ssh -vT git@github.com 2>&1 | awk '
+        /Connecting to/ {
+            gsub(/\./, "", $NF)
+            print "Port Used:", $NF
+        }
+        /Hi/ {
+            gsub(/!/, "", $2)
+            print "Auth Status:", $2
+        }
+    '
 }
 
 # modify dotfiles env PATH and add them in $HOME/gits/dotfiles
 confPATH(){
-command cd $HOME/gits/dotfiles
-gdwait ./env_path
-./add_env
-ll
+    command cd $HOME/gits/dotfiles
+    gdwait ./env_path
+    ./add_env
+    ll
 }
 
 # gedit Makefile in current path
 gdmakefile(){
-gd ./Makefile
+    gd ./Makefile
 }
 
+# source ~/.bashrc without thinking hh
+source(){
+    if [[ -z $1 ]];then
+        command source ~/.bashrc
+    else
+        command source $1
+    fi
+}
 
 # This is ysyx PATH generated by ysyx-workbench/init.sh
 export NPC_HOME=/home/icer/ysyx/ysyx-workbench/npc
