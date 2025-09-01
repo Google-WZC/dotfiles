@@ -2,6 +2,9 @@
 ~/.profile
 ~/.bashrc
 
+# bashrc data
+~/..bashrcData
+
 # for SHELL hotkey
 ~/.inputrc
 
@@ -10,6 +13,9 @@
 
 # for customized tmux
 ~/.tmux.conf
+
+# for git to github.com
+~/.ssh/config
 
 # mainly for gedit, but is default
 # ~/.config

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo grep -Pv '^#' env_path | sed 's#^~#/home/icer#' | xargs -I {} sudo cp {} $(pwd)
+sudo grep -Pv '^#' env_path | sed 's#^~#/home/icer#' | xargs -I {} sudo cp -a {} $(pwd)
