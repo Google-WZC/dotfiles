@@ -1,18 +1,9 @@
 # vscode software
 alias vscode=code
 
-# overwrite customized command gedit ~/.bashrc
-alias bashrc=gdbashrc
-
 # gedit Makefile in current path
 gdmakefile(){
     gd ./Makefile
-}
-
-# open ~/.bashrc with gedit and source if shutdowm
-    gdbashrc(){
-    gdwait ~/.bashrc
-    command source ~/.bashrc
 }
 
 # open ~/.profile with gedit and source if shutdowm
@@ -58,3 +49,73 @@ gdwait(){
 vi(){
     vim "$@" 
 }
+
+# divide bashrc below----------------------
+alias TERMINAL='gdTERMINAL'
+alias PATH='gdPATH'
+alias PROXY='gdPROXY'
+alias OVERRIDE='gdOVERRIDE'
+alias WRONG='gdWRONG'
+alias EDITOR='gdEDITOR'
+alias CUSTOMIZED='gdCUSTOMIZED' 
+alias APT='gdAPT'
+alias GIT='gdGIT'
+alias PIP='gdPIP'
+alias LANGUAGE='gdLANGUAGE'
+
+
+gdTERMINAL() {
+	gdwait ~/..bashrcData/terminal
+	source ~/..bashrcData/terminal
+}
+
+gdPATH() {
+	gdwait ~/..bashrcData/path
+	source ~/..bashrcData/path
+}
+
+gdPROXY() {
+	gdwait ~/..bashrcData/proxy
+	source ~/..bashrcData/proxy
+}
+
+gdOVERRIDE() {
+	gdwait ~/..bashrcData/override
+	source ~/..bashrcData/override
+}
+
+gdWRONG() {
+	gdwait ~/..bashrcData/wrong
+	source ~/..bashrcData/wrong
+}
+
+gdEDITOR() {
+	gdwait ~/..bashrcData/editor
+	source ~/..bashrcData/editor
+}
+
+gdCUSTOMIZED() {
+	gdwait ~/..bashrcData/customized
+	source ~/..bashrcData/customized
+}
+
+gdAPT() {
+	gdwait ~/..bashrcData/apt
+	source ~/..bashrcData/apt
+}
+
+gdGIT() {
+	gdwait ~/..bashrcData/git
+	source ~/..bashrcData/git
+}
+
+gdPIP() {
+	gdwait ~/..bashrcData/pip
+	source ~/..bashrcData/pip
+}
+
+gdLANGUAGE() {
+	gdwait ~/..bashrcData/language
+	source ~/..bashrcData/language
+}
+# end ---------------------------------------

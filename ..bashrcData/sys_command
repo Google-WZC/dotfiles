@@ -8,7 +8,7 @@ source ~/..bashrcData/wrong
 source ~/..bashrcData/editor
 
 # my costumized command with basic sys_command and editor_command combinated
-source ~/..bashrcData/costumized
+source ~/..bashrcData/customized
 
 
 

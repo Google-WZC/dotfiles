@@ -13,3 +13,15 @@ alias mkcd=mkdir
 # switch to root account
 alias su="sudo su"
 
+# overwrite customized command gedit ~/.bashrc
+alias bashrc=gdbashrc
+# open ~/.bashrc with gedit and source if shutdowm
+gdbashrc(){
+    # gdwait ~/.bashrc
+    # command source ~/.bashrc
+    echo 'Now is divide file 👌'
+    echo 'env         :: terminal path   proxy '
+    echo 'sys_command :: override wrong  editor  costumized'
+    echo 'func        :: apt      git    pip     language'
+    echo 'Remember capital word ❤️ '
+}
